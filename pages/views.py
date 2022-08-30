@@ -34,6 +34,7 @@ class MusicianView(APIView):
 
 
 class IssueView(APIView):
+    permission_classes  = [IsAuthenticated]
     def get(self, request,num=None):
         print(request.user)
         return Response(IssueSerializer(Issue.objects.filter(sprint__isnull=True),many=True).data)
