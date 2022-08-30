@@ -9,24 +9,36 @@ class Musician(models.Model):
     instrument = models.CharField(max_length=100)
 
 
+class Sprint(models.Model):
+    name = models.CharField(  
+        max_length=100,
+        )
+
+
 class Issue(models.Model):
+    sprint = models.ForeignKey(Sprint, 
+    on_delete=models.CASCADE,
+    related_name="issues",
+    null=True,)
+
     TYPES_CHOICES = [
+        ("", ''), 
         ("Task", 'Task'),
         ("Bug", 'Bug'),
         ("Feature", 'Feature'),
-      
     ]
    
     type = models.CharField(
         max_length=10,
         choices=TYPES_CHOICES,
-        null=False,
+        null=True,
     
     )
 
     description = models.TextField()
 
     STATUS_CHOICES = [
+        ("", ''), 
         ("In Progress", 'In Progress'),
         ("Closed", 'Closed'),
         ("Done", 'Done'),
@@ -34,6 +46,8 @@ class Issue(models.Model):
     status = models.CharField(  
         max_length=100,
         choices=STATUS_CHOICES,
-        null=False,)
+        null=True ,)
+
+
 
 
