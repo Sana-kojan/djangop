@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from django.contrib import admin
 from pages.models import Musician,Issue,Sprint
-from pages.serializers import MusicianSerializer, IssueSerializer, SprintSerializer
-from pages.views import MusicianView,IssueView,SprintView
+from pages.serializers import MusicianSerializer, IssueSerializer, SprintSerializer, UserSerializer
+from pages.views import MusicianView,IssueView,SprintView,UserView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -39,6 +39,8 @@ urlpatterns = [
 
     path('jiraSprint/<int:num>/', SprintView.as_view()),
     path('jiraSprint/', SprintView.as_view()),
+
+    path('users/', UserView.as_view()),
 
  
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

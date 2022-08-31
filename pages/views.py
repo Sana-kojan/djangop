@@ -6,14 +6,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from pages.models import Musician,Issue,Sprint
-from pages.serializers import MusicianSerializer, IssueSerializer, SprintSerializer
+from pages.serializers import MusicianSerializer, IssueSerializer, SprintSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+ 
+
+
 def homePageView(request):
     return HttpResponse("Hello, World!")
 
 class MusicianView(APIView):
     def get(self, request,num=None):
         return Response(MusicianSerializer(Musician.objects.all(),many=True).data)
+
     def post(self,request,num=None):
         user =MusicianSerializer(Musician.objects.create(first_name=request.data["first_name"],last_name=request.data["last_name"],instrument=request.data["instrument"])).data
         return Response(user)
@@ -31,21 +36,30 @@ class MusicianView(APIView):
         user.delete()
         return Response()
 
+class UserView(APIView):
+    def get(self, request,num=None):
+        users = User.objects.all()
+        print(users)
+        return Response(UserSerializer(users,many=True).data)
 
+class UserIssueView(APIView):
+    def get(self, request,num=None):    
+        user_issues = request.user.issues.all()
+        return Response(IssueSerializer(user_issues,many=True).data)
 
 class IssueView(APIView):
     permission_classes  = [IsAuthenticated]
     def get(self, request,num=None):
-        print(request.user)
         return Response(IssueSerializer(Issue.objects.filter(sprint__isnull=True),many=True).data)
 
     def post(self,request,num=None):
-        print(request.data)
         issueJ =IssueSerializer(Issue.objects.create(
             type=request.data.get("type"),
             description=request.data.get("description"),
             status=request.data.get("status"),
+            user_id = request.data.get("user"),
             sprint_id=request.data.get("sprint"))).data
+            
         return Response(issueJ)
 
     def patch(self,request,num=None):
