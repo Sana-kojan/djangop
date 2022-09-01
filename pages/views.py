@@ -9,7 +9,8 @@ from pages.models import Musician,Issue,Sprint
 from pages.serializers import MusicianSerializer, IssueSerializer, SprintSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
- 
+from django.shortcuts import render 
+from django.views.generic import TemplateView
 
 
 def homePageView(request):
@@ -39,8 +40,11 @@ class MusicianView(APIView):
 class UserView(APIView):
     def get(self, request,num=None):
         users = User.objects.all()
-        print(users)
         return Response(UserSerializer(users,many=True).data)
+
+
+
+    
 
 class UserIssueView(APIView):
     def get(self, request,num=None):    
@@ -90,9 +94,17 @@ class SprintView(APIView):
         sprints.save()
         return Response(SprintSerializer(sprints).data)
 
+
     def delete(self,request,num):
         sprints = Sprint.objects.get(id=num)
         sprints.delete()
         return Response()
+
+def temp_test(request):
+    issues =  Issue.objects.filter(sprint__isnull=True)
+    context = {
+        'issues':issues
+    }
+    return render(request, 'temp.html',context)
        
             

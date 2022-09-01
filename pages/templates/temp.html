@@ -1,0 +1,12 @@
+<html>
+<head><title> notice</title></head>
+
+<body>
+
+<h1>Backlog</h1>
+{% for iss in issues %}
+    <li>{{ iss.type }}</li>
+{% endfor %}
+
+</body>
+</html>
